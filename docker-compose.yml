@@ -1,7 +1,3 @@
-# mail@dongguochao.com
-# llitfkitfk@gmail.com
-# chibing.fy@alibaba-inc.com
-
 version: '3'
 
 services:
@@ -21,14 +17,14 @@ services:
     environment:
       - SERVE_PORT=38080
       # if you have your own mysql, config it here, and disable the 'mysql' config blow
-      - MYSQL_URL=mysql # links will maintain /etc/hosts, just use 'container_name'
+      - MYSQL_URL=maple-mysql # links will maintain /etc/hosts, just use 'container_name'
       - MYSQL_PORT=3306
       - MYSQL_USERNAME=root
       - MYSQL_PASSWD=
-      - MYSQL_SCHEMA=rap2
+      - MYSQL_SCHEMA=RAP2_DELOS_APP
 
       # redis config
-      - REDIS_URL=redis
+      - REDIS_URL=maple-mysql
       - REDIS_PORT=6379
 
       # production / development
