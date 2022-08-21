@@ -6,7 +6,7 @@ services:
     image: mapleimage123/rap2-dolores:1.0.1
     ports:
       #冒号前可以自定义前端端口号，冒号后不要动
-      - 3000:38081
+      - 38081:38081
 
   # backend
   delos:
@@ -16,13 +16,13 @@ services:
       - 38080:38080
     environment:
       - SERVE_PORT=38080
-      - MYSQL_URL=172.18.0.2
+      - MYSQL_URL=maple-mysql
       - MYSQL_PORT=3306
       - MYSQL_USERNAME=root
       - MYSQL_PASSWD=
       - MYSQL_SCHEMA=RAP2_DELOS_APP
       # redis config
-      - REDIS_URL=172.18.0.3
+      - REDIS_URL=maple-redis
       - REDIS_PORT=6379
       # production / development
       - NODE_ENV=production
