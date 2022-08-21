@@ -7,7 +7,7 @@ let config: IConfigOptions = {
     port: (process.env.SERVE_PORT && parseInt(process.env.SERVE_PORT)) || 8080,
     path: '',
   },
-  keys: ["some secret hurr"],
+  keys: ['some secret hurr'],
   session: {
     key: 'rap2:sess',
   },
@@ -17,7 +17,7 @@ let config: IConfigOptions = {
     port: (process.env.MYSQL_PORT && parseInt(process.env.MYSQL_PORT)) || 3306,
     username: process.env.MYSQL_USERNAME || 'root',
     password: process.env.MYSQL_PASSWD || '',
-    database: process.env.MYSQL_SCHEMA || 'rap',
+    database: process.env.MYSQL_SCHEMA || 'RAP2_DELOS_APP',
     pool: {
       max: 80,
       min: 0,
@@ -40,7 +40,7 @@ let config: IConfigOptions = {
       pass: process.env.MAIL_PASS ?? '',
     },
   },
-  mailSender: process.env.MAIL_SENDER ?? "rap2org@service.alibaba.com"
+  mailSender: process.env.MAIL_SENDER ?? 'rap2org@service.alibaba.com',
 }
 
 export default config
