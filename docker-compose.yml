@@ -35,6 +35,5 @@ services:
     # command: node dispatch.js
 networks:
   default:
-    external:
       # command: 指定已经存在的network
       name: maple-network
