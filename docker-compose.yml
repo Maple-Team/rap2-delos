@@ -4,13 +4,16 @@ services:
   # frontend
   dolores:
     image: mapleimage123/rap2-dolores:1.0.1
+    container_name: dolores
+    restart: "always"
     ports:
       #冒号前可以自定义前端端口号，冒号后不要动
       - 38081:38081
-
   # backend
   delos:
     image: mapleimage123/rap2-delos:1.0.1
+    container_name: delos
+    restart: "always"
     ports:
       # 这里的配置不要改哦
       - 38080:38080
