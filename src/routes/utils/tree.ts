@@ -2,6 +2,7 @@ import { Property } from '../../models'
 import * as _ from 'underscore'
 const { VM } = require('vm2')
 import * as Mock from 'mockjs'
+import '@liutsing/mock-extend'
 const { RE_KEY } = require('mockjs/src/mock/constant')
 
 export default class Tree {
@@ -13,7 +14,7 @@ export default class Tree {
     }
 
     let mapped: any = {}
-    list.forEach(item => {
+    list.forEach((item) => {
       mapped[item.id] = item
     })
 
@@ -46,7 +47,7 @@ export default class Tree {
   public static TreeToTemplate(tree: any) {
     const vm = new VM({
       sandbox: {},
-      timeout: 3000
+      timeout: 3000,
     })
     function parse(item: any, result: any) {
       let rule = item.rule ? '|' + item.rule : ''
@@ -137,8 +138,8 @@ export default class Tree {
     // 数据模板 template 中可能含有攻击代码，例如死循环，所以在沙箱中生成最终数据
     // https://nodejs.org/dist/latest-v7.x/docs/api/vm.html
     const vm = new VM({
-      sandbox: { mock: Mock.mock, template, },
-      timeout: 3000
+      sandbox: { mock: Mock.mock, template },
+      timeout: 3000,
     })
     try {
       let data: any = vm.run('mock(template)')
@@ -167,7 +168,7 @@ export default class Tree {
     }
     if (extra) {
       // DONE 2.2 支持引用请求参数
-      let keys = Object.keys(template).map(item => item.replace(RE_KEY, '$1'))
+      let keys = Object.keys(template).map((item) => item.replace(RE_KEY, '$1'))
       let extraKeys = _.difference(Object.keys(extra), keys)
       let scopedData = Tree.TemplateToData(Object.assign({}, _.pick(extra, extraKeys), template))
 
@@ -393,7 +394,8 @@ export default class Tree {
           const childSiblings = hasSiblings
             ? siblings.map(
                 (s: any) =>
-                  (s && s.properties && s.properties.find((p: any) => p && p.name === item.name)) || null,
+                  (s && s.properties && s.properties.find((p: any) => p && p.name === item.name)) ||
+                  null,
               )
             : undefined
           handleJSONSchema(item, property, memoryProperties, childSiblings)

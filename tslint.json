@@ -23,7 +23,7 @@
       "avoid-escape"
     ],
     "semicolon": [
-      true,
+      false,
       "never",
       "ignore-bound-class-methods"
     ],

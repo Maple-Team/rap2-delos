@@ -1,5 +1,5 @@
 # BUILDING
-FROM node:lts-alpine AS builder
+FROM node:16 AS builder
 
 # base on work of llitfkitfk@gmail.com
 LABEL maintainer="liutsingluo@gmail.com"
@@ -10,10 +10,10 @@ WORKDIR /app
 COPY package.json ./
 
 # 在国内打开下面一行加速
-RUN npm config set registry https://registry.npm.taobao.org/
+RUN npm config set registry https://registry.npmmirror.com/
 
 # instal dependencies
-RUN npm install typescript -g && \
+RUN npm install typescript@3 -g  && \
     npm install
 
 # build
@@ -21,7 +21,7 @@ COPY . ./
 RUN npm run build
 
 # RUNNING
-FROM node:lts-alpine
+FROM node:16
 
 # base on work of llitfkitfk@gmail.com
 LABEL maintainer="liutsingluo@gmail.com"
