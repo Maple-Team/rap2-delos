@@ -4,6 +4,8 @@ import urlUtils from '../routes/utils/url'
 import Tree from '../routes/utils/tree'
 import * as urlPkg from 'url'
 import * as querystring from 'querystring'
+import { get } from 'request'
+import configObj from '../config'
 
 const REG_URL_METHOD = /^\/?(get|post|delete|put)/i
 const attributes: any = { exclude: [] }
@@ -32,7 +34,7 @@ export class MockService {
     let matchedItfList = await Interface.findAll({
       attributes,
       where: {
-        repositoryId: [repositoryId, ...collaborators.map(item => item.id)],
+        repositoryId: [repositoryId, ...collaborators.map((item) => item.id)],
         ...(forceVerify ? { method } : {}),
         url: {
           [Op.like]: `%${urlWithoutPrefixSlash}%`,
@@ -58,7 +60,7 @@ export class MockService {
 
     // matching by path
     if (matchedItfList.length > 1) {
-      matchedItfList = matchedItfList.filter(x => {
+      matchedItfList = matchedItfList.filter((x) => {
         const urlDoc = getRelativeURLWithoutParams(x.url)
         const urlRequest = urlWithoutPrefixSlash
         return urlDoc === urlRequest
@@ -72,9 +74,9 @@ export class MockService {
         ...ctx.request.body,
       }
       const paramsKeysCnt = Object.keys(params).length
-      matchedItfList = matchedItfList.filter(x => {
+      matchedItfList = matchedItfList.filter((x) => {
         const parsedUrl = urlPkg.parse(x.url)
-        const pairs = parsedUrl.query ? parsedUrl.query.split('&').map(x => x.split('=')) : []
+        const pairs = parsedUrl.query ? parsedUrl.query.split('&').map((x) => x.split('=')) : []
         // 接口没有定义参数时看请求是否有参数
         if (pairs.length === 0) {
           return paramsKeysCnt === 0
@@ -93,7 +95,7 @@ export class MockService {
 
     // 多个协同仓库的结果优先返回当前仓库的
     if (matchedItfList.length > 1) {
-      const currProjMatchedItfList = matchedItfList.filter(x => x.repositoryId === repositoryId)
+      const currProjMatchedItfList = matchedItfList.filter((x) => x.repositoryId === repositoryId)
       // 如果直接存在当前仓库的就当做结果集，否则放弃
       if (currProjMatchedItfList.length > 0) {
         matchedItfList = currProjMatchedItfList
@@ -116,7 +118,7 @@ export class MockService {
       let list = await Interface.findAll({
         attributes: ['id', 'url', 'method'],
         where: {
-          repositoryId: [repositoryId, ...collaborators.map(item => item.id)],
+          repositoryId: [repositoryId, ...collaborators.map((item) => item.id)],
           method,
         },
       })
@@ -152,8 +154,21 @@ export class MockService {
           }
         }
       } else if (listMatched.length === 0) {
-        ctx.body = { isOk: false, errMsg: '未匹配到任何接口，请检查请求类型是否一致。' }
-        ctx.status = 404
+        const proxyURL = encodeURI(
+          ctx.request.url.replace(/app\/mock\/\d+\//, '').replace(/\//g, '@'),
+        )
+        // await get(`/api/mock${proxyURL}`, { baseUrl: 'http://maple-delos:3000' })
+        console.log('proxyURL', proxyURL)
+        const data = await new Promise((resolve, reject) => {
+          get(`/api/mock/${proxyURL}`, { baseUrl: configObj.directBaseURL }, (err, _, body) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(JSON.parse(body).data)
+            }
+          })
+        })
+        ctx.body = data
         return
       } else {
         loadDataId = listMatched[0].id
@@ -201,10 +216,7 @@ export class MockService {
         }
       }
       if (!passed) {
-        ctx.set(
-          'X-RAP-WARNING',
-          `Required parameter ${pFailed.name} has not be passed in.`,
-        )
+        ctx.set('X-RAP-WARNING', `Required parameter ${pFailed.name} has not be passed in.`)
       }
     }
 

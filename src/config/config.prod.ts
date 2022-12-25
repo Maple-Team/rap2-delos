@@ -31,6 +31,7 @@ let config: IConfigOptions = {
     port: (process.env.REDIS_PORT && parseInt(process.env.REDIS_PORT)) || 6379,
     password: process.env.REDIS_PWD || undefined,
   },
+  directBaseURL: 'http://maple-delos:3000',
   mail: {
     host: process.env.MAIL_HOST ?? 'smtp.aliyun.com',
     port: process.env.MAIL_PORT ?? 465,
