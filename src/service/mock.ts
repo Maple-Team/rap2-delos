@@ -155,7 +155,7 @@ export class MockService {
         }
       } else if (listMatched.length === 0) {
         const proxyURL = encodeURI(
-          ctx.request.url.replace(/app\/mock\/\d+\//, '').replace(/\//g, '@'),
+          ctx.request.url.split('?')[0].replace(/app\/mock\/\d+\//, '').replace(/\//g, '@'),
         )
         // await get(`/api/mock${proxyURL}`, { baseUrl: 'http://maple-delos:3000' })
         console.log('proxyURL', proxyURL)
