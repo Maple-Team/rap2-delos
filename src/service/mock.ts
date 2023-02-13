@@ -154,12 +154,15 @@ export class MockService {
           }
         }
       } else if (listMatched.length === 0) {
+        const [url, query] = ctx.request.url.split('?')
+
         const proxyURL = encodeURI(
-          ctx.request.url.split('?')[0].replace(/app\/mock\/\d+\//, '').replace(/\//g, '@'),
+          `${url.replace(/app\/mock\/\d+\//, '').replace(/\//g, '@')}_${query.replace(/:/g, '@')}`,
         )
         // await get(`/api/mock${proxyURL}`, { baseUrl: 'http://maple-delos:3000' })
         console.log('proxyURL', proxyURL)
         const data = await new Promise((resolve, reject) => {
+          // 请求maple-nest项目的后台数据
           get(`/api/mock/${proxyURL}`, { baseUrl: configObj.directBaseURL }, (err, _, body) => {
             if (err) {
               reject(err)
